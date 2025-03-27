@@ -12,7 +12,7 @@ declare global {
 export const authenticate = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
@@ -28,4 +28,4 @@ export const authenticate = (
   } catch (error) {
     res.status(401).json({ message: 'Invalid or expired token' });
   }
-}; 
+};

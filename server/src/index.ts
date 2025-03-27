@@ -19,17 +19,16 @@ app.use(clientUse());
 app.use(routeMiddleware);
 
 // Test Route
-app.use("/hello", (_req, res) => {
-  res.send("Hello World");
+app.use('/hello', (_req, res) => {
+  res.send('Hello World');
 });
 
 // Routes
 app.use('/api/auth', authRoutes);
 
-
 // Error handling
 app.use(errorHandler);
-console.log("process.env", process.env.MONGODB_URI)
+console.log('process.env', process.env.MONGODB_URI);
 // Database connection
 mongoose
   .connect(process.env.MONGODB_URI!)
@@ -42,4 +41,4 @@ mongoose
   })
   .catch((error) => {
     console.error('MongoDB connection error:', error);
-  }); 
+  });

@@ -6,7 +6,7 @@ import User from '../models/user.model';
 export const register = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const { email, password, name } = req.body;
@@ -28,11 +28,9 @@ export const register = async (
     });
 
     // Generate token
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET!,
-      { expiresIn: '1d' }
-    );
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
+      expiresIn: '1d',
+    });
 
     res.status(201).json({
       message: 'User created successfully',
@@ -51,7 +49,7 @@ export const register = async (
 export const login = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const { email, password } = req.body;
@@ -69,11 +67,9 @@ export const login = async (
     }
 
     // Generate token
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET!,
-      { expiresIn: '1d' }
-    );
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
+      expiresIn: '1d',
+    });
 
     res.json({
       message: 'Logged in successfully',
@@ -92,7 +88,7 @@ export const login = async (
 export const getProfile = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const user = await User.findById(req.user?.userId).select('-password');
@@ -104,4 +100,4 @@ export const getProfile = async (
   } catch (error) {
     next(error);
   }
-}; 
+};
