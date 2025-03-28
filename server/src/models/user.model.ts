@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { type Document, Schema } from 'mongoose';
 
 export interface IUser extends Document {
   email: string;
@@ -8,7 +8,7 @@ export interface IUser extends Document {
   updatedAt: Date;
 }
 
-const userSchema = new Schema<IUser>(
+export const UserSchema = new Schema<IUser>(
   {
     email: {
       type: String,
@@ -29,7 +29,7 @@ const userSchema = new Schema<IUser>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-export default mongoose.model<IUser>('User', userSchema); 
+export default mongoose.model<IUser>('User', UserSchema);

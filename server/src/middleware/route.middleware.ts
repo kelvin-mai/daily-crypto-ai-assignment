@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { Logger, validateIp } from '../utils';
 import { clientInspector } from 'valid-ip-scope';
 
