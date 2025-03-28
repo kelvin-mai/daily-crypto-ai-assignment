@@ -7,8 +7,28 @@ export const listBooks = async (
   next: NextFunction,
 ) => {
   try {
-    const books = await Book.find({ owner: req.user?.userId });
-    res.json({ books });
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    const skip = (page - 1) * limit;
+
+    const books = await Book.find({ owner: req.user?.userId })
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const total = await Book.countDocuments();
+    const pages = Math.ceil(total / limit);
+
+    res.json({
+      books,
+      meta: {
+        total,
+        pages,
+        currentPage: page,
+        pageSize: books.length,
+      },
+    });
   } catch (e) {
     next(e);
   }
