@@ -1,5 +1,11 @@
-import { API_URL } from '../lib/env';
-import { AuthUser, UserDocument } from '../types/api';
+import { API_URL } from '../lib/utils/env';
+import { AuthUser, UserDocument } from '../lib/types/api';
+
+export type AuthParams = {
+  email: string;
+  password: string;
+  name: string;
+};
 
 type AuthResponse = {
   message: string;
@@ -7,15 +13,7 @@ type AuthResponse = {
   user: AuthUser;
 };
 
-export const register = async ({
-  email,
-  password,
-  name,
-}: {
-  email: string;
-  password: string;
-  name: string;
-}) => {
+export const register = async ({ email, password, name }: AuthParams) => {
   try {
     const request = await fetch(`${API_URL}/api/auth/register`, {
       method: 'POST',
@@ -29,20 +27,13 @@ export const register = async ({
       }),
     });
     const response: AuthResponse = await request.json();
-    localStorage.setItem('token', response.token);
     return response;
   } catch (e) {
     console.log(e);
   }
 };
 
-export const login = async ({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) => {
+export const login = async ({ email, password }: Omit<AuthParams, 'name'>) => {
   try {
     const request = await fetch(`${API_URL}/api/auth/login`, {
       method: 'POST',
@@ -55,8 +46,9 @@ export const login = async ({
         name,
       }),
     });
+    console.log('login request', request);
     const response: AuthResponse = await request.json();
-    localStorage.setItem('token', response.token);
+    console.log('login response', response);
     return response;
   } catch (e) {
     console.log(e);

@@ -1,32 +1,40 @@
-import { use, useEffect, useState } from 'react';
-import { register, login, getProfile } from '../api/auth';
-import { createBook, listBooks } from '../api/book';
+import { useEffect } from 'react';
+
+import { Navbar } from './layout/navbar';
+import { useAppStore } from '../lib/store';
+import { getProfile } from '../api/auth';
 
 export const App = () => {
-  const env = import.meta.env;
-  console.log('API_URL', env);
-  const [books, setBooks] = useState();
+  const {
+    initialized,
+    actions: { setInitialized, setUser },
+  } = useAppStore();
+
+  const initializeApp = async () => {
+    try {
+      if (localStorage.getItem('token')) {
+        const profile = await getProfile();
+        setUser(profile);
+      }
+    } catch (err) {
+      localStorage.removeItem('token');
+    } finally {
+      setInitialized(true);
+    }
+  };
+
+  useEffect(() => {
+    if (!initialized) {
+      initializeApp();
+    }
+  }, [initialized]);
 
   return (
     <div className="min-h-screen">
-      <h1 className="text-2xl font-bold">Hello World</h1>
-      <button
-        className="rounded shadow py-2 px-4 bg-teal-500 text-white"
-        onClick={() =>
-          login({
-            email: 'me@kelvinmai.io',
-            password: 'password',
-          })
-        }
-      >
-        button
-      </button>
-      <button
-        className="rounded shadow py-2 px-4 bg-purple-500 text-white"
-        onClick={() => listBooks({})}
-      >
-        button
-      </button>
+      <Navbar />
+      <main>
+        <h1 className="text-2xl font-bold">Hello World</h1>
+      </main>
     </div>
   );
 };

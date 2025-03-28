@@ -1,5 +1,5 @@
-import { API_URL } from '../lib/env';
-import { BookDocument } from '../types/api';
+import { API_URL } from '../lib/utils/env';
+import { BookDocument } from '../lib/types/api';
 
 const baseUrl = `${API_URL}/api/books`;
 
