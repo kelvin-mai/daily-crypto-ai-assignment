@@ -4,6 +4,8 @@ import { IUser } from './user.model';
 export interface IBook extends Document {
   title: string;
   author: string;
+  totalPages: number;
+  pagesRead: number;
   owner: IUser;
   createdAt: Date;
   updatedAt: Date;
@@ -18,6 +20,14 @@ const bookSchema = new Schema<IBook>(
     author: {
       type: String,
       required: true,
+    },
+    totalPages: {
+      type: Number,
+      required: true,
+    },
+    pagesRead: {
+      type: Number,
+      default: 0,
     },
     owner: {
       type: mongoose.Schema.ObjectId,

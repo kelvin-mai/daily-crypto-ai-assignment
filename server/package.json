@@ -6,7 +6,8 @@
     "start": "ts-node src/index.ts",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "seed": "ts-node src/seed.ts"
   },
   "author": "",
   "license": "MIT",
