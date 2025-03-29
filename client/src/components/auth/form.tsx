@@ -1,15 +1,17 @@
 import { useState } from 'react';
 
-import { Label, Input } from '../common/form';
+import { FormInput } from '../common/form';
 import { AuthParams, register, login } from '../../api/auth';
 import { useAppStore } from '../../lib/store';
+import { SpinnerOne } from '@mynaui/icons-react';
 
-type AuthFormType = {
-  authType: 'register' | 'login';
+type AuthFormProps = {
+  mode: 'register' | 'login';
+  onComplete(): void;
 };
 
-export const AuthForm: React.FC<AuthFormType> = ({ authType }) => {
-  const request = authType === 'register' ? register : login;
+export const AuthForm: React.FC<AuthFormProps> = ({ mode, onComplete }) => {
+  const action = mode === 'register' ? register : login;
   const {
     actions: { setUser },
   } = useAppStore();
@@ -19,12 +21,16 @@ export const AuthForm: React.FC<AuthFormType> = ({ authType }) => {
     name: '',
     password: '',
   });
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await request(params);
+    setLoading(true);
+    const response = await action(params);
+    setLoading(false);
     localStorage.setItem('token', response?.token!);
     setUser(response?.user);
+    onComplete();
   };
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -34,43 +40,40 @@ export const AuthForm: React.FC<AuthFormType> = ({ authType }) => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-4 flex flex-col space-y-2">
-        <div className="flex w-full flex-col space-y-2 mb-4">
-          <Label htmlFor="email">Email Address</Label>
-          <Input
-            id="email"
-            placeholder="john@example.com"
-            type="email"
-            value={params.email}
+        <FormInput
+          className="mb-4"
+          id="email"
+          label="Email Address"
+          placeholder="john@example.com"
+          type="email"
+          value={params.email}
+          onChange={handleChange}
+        />
+        {mode === 'register' && (
+          <FormInput
+            className="mb-4"
+            id="name"
+            label="Name"
+            placeholder="John Example"
+            type="name"
+            value={params.name}
             onChange={handleChange}
           />
-        </div>
-        {authType === 'register' && (
-          <div className="flex w-full flex-col space-y-2 mb-4">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              placeholder="John Example"
-              type="name"
-              value={params.name}
-              onChange={handleChange}
-            />
-          </div>
         )}
-        <div className="flex w-full flex-col space-y-2 mb-4">
-          <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            placeholder="**********"
-            type="password"
-            value={params.password}
-            onChange={handleChange}
-          />
-        </div>
+        <FormInput
+          className="mb-4"
+          id="password"
+          label="Password"
+          placeholder="**********"
+          type="password"
+          value={params.password}
+          onChange={handleChange}
+        />
         <button
-          className="w-full bg-violet-500 text-white py-2 px-4 rounded shadow capitalize"
+          className="w-full bg-violet-500 text-white py-2 px-4 rounded shadow capitalize flex justify-center items-center"
           type="submit"
         >
-          {authType}
+          {loading ? <SpinnerOne className="animate-spin" /> : mode}
         </button>
       </div>
     </form>

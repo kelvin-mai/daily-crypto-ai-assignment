@@ -21,3 +21,10 @@ export type BookDocument = {
   author: string;
   owner: string;
 } & Document;
+
+export type BooksPagination = {
+  currentPage: number;
+  pageSize: number;
+  pages: number;
+  total: number;
+};

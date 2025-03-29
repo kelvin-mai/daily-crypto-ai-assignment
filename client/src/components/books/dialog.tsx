@@ -9,14 +9,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../common/dialog';
-import { AuthForm } from './form';
+import { BookForm } from './form';
 
-type AuthDialogProps = {
-  action: 'register' | 'login';
-  className: string;
+type BookDialogProps = {
+  action: 'create' | 'edit';
+  className?: string;
 };
 
-export const AuthDialog: React.FC<AuthDialogProps> = ({
+export const BookDialog: React.FC<BookDialogProps> = ({
   action,
   className,
 }) => {
@@ -35,13 +35,10 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
-          <DialogTitle>Authentication</DialogTitle>
-          <DialogDescription>
-            Please log into your account or sign up for a new one before using
-            this platform.
-          </DialogDescription>
+          <DialogTitle>Book</DialogTitle>
+          <DialogDescription>Create a book.</DialogDescription>
         </DialogHeader>
-        <AuthForm mode={action} onComplete={() => setOpen(false)} />
+        <BookForm mode={action} onComplete={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );

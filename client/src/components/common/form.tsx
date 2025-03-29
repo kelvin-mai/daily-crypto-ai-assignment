@@ -3,7 +3,7 @@ import * as LabelPrimitive from '@radix-ui/react-label';
 import { motion, useMotionTemplate, useMotionValue } from 'motion/react';
 import { cn } from '../../lib/utils';
 
-const Label = React.forwardRef<
+export const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithRef<typeof LabelPrimitive.Root>
 >(({ className, ...props }, ref) => (
@@ -19,7 +19,7 @@ Label.displayName = LabelPrimitive.Root.displayName;
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
     const radius = 100;
     const [visible, setVisible] = React.useState(false);
@@ -52,7 +52,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           ref={ref}
           className={cn(
-            `shadow-input dark:placeholder-text-neutral-600 flex h-10 w-full rounded-md border-none bg-gray-50 px-3 py-2 text-sm text-black transition duration-400 group-hover/input:shadow-none file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 focus-visible:ring-[2px] focus-visible:ring-neutral-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:text-white dark:shadow-[0px_0px_1px_1px_#404040] dark:focus-visible:ring-neutral-600`,
+            `shadow-input
+             flex h-10 w-full rounded-md border-none bg-gray-50 px-3 py-2 text-sm text-black transition duration-400 group-hover/input:shadow-none
+             file:border-0 file:bg-transparent file:text-sm file:font-medium
+           placeholder:text-neutral-400
+             focus-visible:ring-[2px] focus-visible:ring-violet-400 focus-visible:outline-none
+             disabled:cursor-not-allowed disabled:opacity-50
+             dark:bg-zinc-800 dark:text-white dark:shadow-[0px_0px_1px_1px_#404040] dark:focus-visible:ring-neutral-600 dark:placeholder-text-neutral-600
+             `,
           )}
           {...props}
         />
@@ -61,4 +68,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   },
 );
 
-export { Label, Input };
+export const FormInput: React.FC<InputProps & { label: string }> = ({
+  label,
+  className,
+  ...props
+}) => {
+  return (
+    <div className={cn('flex w-full flex-col space-y-2', className)}>
+      <Label htmlFor={props.id}>{label}</Label>
+      <Input {...props} />
+    </div>
+  );
+};

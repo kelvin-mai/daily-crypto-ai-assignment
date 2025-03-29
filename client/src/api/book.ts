@@ -1,19 +1,14 @@
 import { API_URL } from '../lib/utils/env';
-import { BookDocument } from '../lib/types/api';
+import { BookDocument, BooksPagination } from '../lib/types/api';
 
 const baseUrl = `${API_URL}/api/books`;
 
 type ListBooksResponse = {
   books: BookDocument[];
-  meta: {
-    currentPage: number;
-    pageSize: number;
-    pages: number;
-    total: number;
-  };
+  meta: BooksPagination;
 };
 
-type BookParams = {
+export type BookParams = {
   title: string;
   author: string;
 };
