@@ -35,7 +35,7 @@ export const BookDialog: React.FC<BookDialogProps> = ({
       <DialogTrigger asChild>
         <Button
           className={cn(
-            'capitalize font-semibold text-white bg-violet-500 w-full',
+            'capitalize font-semibold text-white bg-violet-500',
             className,
           )}
           disabled={disabled}
@@ -46,7 +46,11 @@ export const BookDialog: React.FC<BookDialogProps> = ({
       <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
           <DialogTitle>Book</DialogTitle>
-          <DialogDescription>Create a book.</DialogDescription>
+          <DialogDescription>
+            {action === 'create'
+              ? 'Add a new book to your collection'
+              : 'Edit the book details'}
+          </DialogDescription>
         </DialogHeader>
         <BookForm mode={action} onComplete={() => setOpen(false)} {...props} />
       </DialogContent>

@@ -1,7 +1,9 @@
 import * as React from 'react';
 import * as LabelPrimitive from '@radix-ui/react-label';
 import { motion, useMotionTemplate, useMotionValue } from 'motion/react';
+
 import { cn } from '../../lib/utils';
+import { useAppStore } from '../../lib/store';
 
 export const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
@@ -22,6 +24,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
     const radius = 100;
+    const { theme } = useAppStore();
     const [visible, setVisible] = React.useState(false);
 
     let mouseX = useMotionValue(0);
@@ -39,7 +42,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           background: useMotionTemplate`
         radial-gradient(
           ${visible ? radius + 'px' : '0px'} circle at ${mouseX}px ${mouseY}px,
-          #8b5cf6,
+          ${theme === 'dark' ? '#14b8a6' : '#8b5cf6'},
           transparent 80%
         )`,
         }}
@@ -58,7 +61,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
            placeholder:text-neutral-400
              focus-visible:ring-[2px] focus-visible:ring-violet-400 focus-visible:outline-none
              disabled:cursor-not-allowed disabled:opacity-50
-             dark:bg-zinc-800 dark:text-white dark:shadow-[0px_0px_1px_1px_#404040] dark:focus-visible:ring-neutral-600 dark:placeholder-text-neutral-600
              `,
           )}
           {...props}

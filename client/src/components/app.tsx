@@ -9,7 +9,7 @@ export const App = () => {
   const {
     initialized,
     user,
-    actions: { setInitialized, setUser },
+    actions: { setInitialized, setUser, setTheme },
   } = useAppStore();
 
   const initializeApp = async () => {
@@ -17,6 +17,15 @@ export const App = () => {
       if (localStorage.getItem('token')) {
         const profile = await getProfile();
         setUser(profile);
+      }
+      const root = window.document.documentElement;
+      const systemTheme = localStorage.getItem('vite-ui-theme');
+      if (systemTheme) {
+        setTheme(localStorage.getItem('vite-ui-theme') as 'light' | 'dark');
+        root.classList.add(systemTheme);
+      } else {
+        localStorage.setItem('vite-ui-theme', 'light');
+        setTheme('light');
       }
     } catch (err) {
       localStorage.removeItem('token');
@@ -32,7 +41,7 @@ export const App = () => {
   }, [initialized]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen dark:bg-slate-800 dark:text-white">
       <Navbar />
       <main className="py-4">
         <div className="container">
@@ -40,7 +49,7 @@ export const App = () => {
             (user ? (
               <BooksContainer />
             ) : (
-              <div className="mt-8 p-8 rounded-lg shadow-md w-full h-72 flex justify-center items-center">
+              <div className="mt-8 p-8 rounded-lg shadow-md w-full h-72 flex justify-center items-center dark:bg-slate-700">
                 <h4 className="text-xl">
                   You are currently not logged in, please log in to continue
                   using the platform.

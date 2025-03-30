@@ -47,6 +47,7 @@ export const BookTableRow: React.FC<BookTableRowProps> = ({
       <TableCell>
         <div className="flex gap-2">
           <BookDialog
+            className="w-full"
             action="edit"
             id={_id}
             title={title}

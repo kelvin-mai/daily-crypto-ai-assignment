@@ -24,7 +24,7 @@ type BookViewProps = {
 
 const CardView: React.FC<BookViewProps> = ({ books }) => {
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {books.map((b) => (
         <BookCard key={b._id} {...b} />
       ))}
@@ -83,8 +83,18 @@ export const BooksContainer: React.FC<BooksContainerProps> = () => {
     loadBooks();
   }, []);
   return (
-    <div>
-      <BookDialog action="create" />
+    <div className="mt-8">
+      <div className="flex justify-between items-center mb-8">
+        <div className="w-full">
+          <h2 className="text-3xl font-bold text-teal-600 dark:text-teal-500">
+            Book Tracker Dashboard
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400">
+            Track your reading progress across all your books
+          </p>
+        </div>
+        <BookDialog action="create" />
+      </div>
       {books.loading && (
         <div className="grid grid-cols-3 gap-4">
           <Skeleton className="h-64" />
@@ -114,7 +124,7 @@ export const BooksContainer: React.FC<BooksContainerProps> = () => {
         </>
       )}
       {!books.loading && books.list && books.list.length === 0 && (
-        <div className="p-8 rounded-lg shadow-md w-full h-64 flex justify-center items-center">
+        <div className="mt-4 p-8 rounded-lg shadow-md w-full h-64 flex justify-center items-center dark:bg-slate-700">
           <h4 className="text-xl">
             You're collection currently does not have any books, please add some
             books to continue to use the platform.

@@ -17,8 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '../common/dropdown';
 
-const btnClass =
-  'shadow border border-slate-200 hover:bg-slate-200 transition-colors';
+const btnClass = `shadow border border-slate-200 hover:bg-slate-200 transition-colors dark:hover:bg-slate-700`;
 
 export const BookPagination = () => {
   const {

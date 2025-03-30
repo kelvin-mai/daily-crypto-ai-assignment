@@ -12,6 +12,7 @@ type BooksState =
 
 type AppStore = {
   initialized: boolean;
+  theme: 'light' | 'dark';
   user?: UserDocument | AuthUser;
   books: {
     loading: boolean;
@@ -20,6 +21,7 @@ type AppStore = {
   };
   actions: {
     setInitialized(v: boolean): void;
+    setTheme(v: 'light' | 'dark'): void;
     setUser(user?: UserDocument | AuthUser): void;
     setBooks(books: BooksState): void;
     setBook(book: BookDocument): void;
@@ -29,6 +31,7 @@ type AppStore = {
 
 export const useAppStore = create<AppStore>((set) => ({
   initialized: false,
+  theme: 'light',
   user: undefined,
   books: {
     loading: false,
@@ -36,6 +39,9 @@ export const useAppStore = create<AppStore>((set) => ({
   actions: {
     setInitialized: (v: boolean) => {
       set({ initialized: v });
+    },
+    setTheme: (v: 'light' | 'dark') => {
+      set({ theme: v });
     },
     setUser: (user: UserDocument | AuthUser | undefined) => {
       set({ user });

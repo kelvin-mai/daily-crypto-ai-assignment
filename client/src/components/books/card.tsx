@@ -30,6 +30,7 @@ const UpdateProgressInput: React.FC<UpdateProgressInputProps> = ({
 }) => {
   const radius = 100;
   const [visible, setVisible] = useState(false);
+  const { theme } = useAppStore();
 
   let mouseX = useMotionValue(0);
   let mouseY = useMotionValue(0);
@@ -45,7 +46,7 @@ const UpdateProgressInput: React.FC<UpdateProgressInputProps> = ({
         background: useMotionTemplate`
         radial-gradient(
           ${visible ? radius + 'px' : '0px'} circle at ${mouseX}px ${mouseY}px,
-          #8b5cf6,
+          ${theme === 'dark' ? '#14b8a6' : '#8b5cf6'},
           transparent 80%
         )`,
       }}
@@ -56,7 +57,7 @@ const UpdateProgressInput: React.FC<UpdateProgressInputProps> = ({
     >
       <div className="shadow-input flex items-center rounded">
         <input
-          className="px-3 py-2 grow bg-white rounded-s-lg placeholder:text-neutral-400 focus-visible:ring-[2px] focus-visible:ring-violet-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+          className="px-3 py-2 grow bg-white rounded-s-lg placeholder:text-neutral-400 focus-visible:ring-[2px] focus-visible:ring-violet-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:text-black dark:focus-visible:ring-teal-400"
           placeholder={String(pagesRead)}
           type="number"
           min={0}
@@ -64,7 +65,7 @@ const UpdateProgressInput: React.FC<UpdateProgressInputProps> = ({
           value={value}
           onChange={(e) => onChange(parseInt(e.target.value))}
         />
-        <div className="border-l-2 border-l-transparent px-3 py-2 bg-white rounded-e-lg ml-0.5">
+        <div className="border-l-2 border-l-transparent px-3 py-2 bg-white rounded-e-lg ml-0.5 dark:text-black">
           of {totalPages}
         </div>
       </div>
@@ -106,10 +107,10 @@ export const BookCard: React.FC<BookCardProps> = ({
     setLoading(false);
   };
   return (
-    <div className="p-4 rounded-lg shadow-md space-y-2">
+    <div className="p-4 rounded-lg shadow-md space-y-2 dark:bg-slate-700">
       <div className="flex justify-between items-start">
         <h4 className="text-xl font-semibold">{title}</h4>
-        <div className="inline-flex items-center justify-center rounded-xl border px-2 text-sm font-semibold text-white bg-teal-500 w-16">
+        <div className="inline-flex items-center justify-center rounded-xl px-2 text-sm font-semibold shadow text-white bg-teal-500 w-16">
           {percentage} %
         </div>
       </div>
@@ -140,7 +141,12 @@ export const BookCard: React.FC<BookCardProps> = ({
           value={page}
           onChange={setPage}
         />
-        <button type="button" onClick={handleUpdateProgress} disabled={loading}>
+        <button
+          type="button"
+          className="py-2 px-3 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-500 hover:cursor-pointer disabled:cursor-default"
+          onClick={handleUpdateProgress}
+          disabled={loading}
+        >
           {loading ? (
             <SpinnerOne className="animate-spin h-6 w-6" />
           ) : (
@@ -151,6 +157,7 @@ export const BookCard: React.FC<BookCardProps> = ({
       <div className="flex gap-2">
         <BookDialog
           action="edit"
+          className="w-full"
           id={_id}
           title={title}
           author={author}
