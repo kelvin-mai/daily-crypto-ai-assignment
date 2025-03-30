@@ -4,6 +4,7 @@ import { Navbar } from './layout/navbar';
 import { useAppStore } from '../lib/store';
 import { getProfile } from '../api/auth';
 import { BooksContainer } from './books/container';
+import { Toaster } from '../components/common/toast';
 
 export const App = () => {
   const {
@@ -58,6 +59,7 @@ export const App = () => {
             ))}
         </div>
       </main>
+      <Toaster />
     </div>
   );
 };

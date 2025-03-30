@@ -60,6 +60,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
              file:border-0 file:bg-transparent file:text-sm file:font-medium
            placeholder:text-neutral-400
              focus-visible:ring-[2px] focus-visible:ring-violet-400 focus-visible:outline-none
+             dark:focus-visible:ring-teal-400
              disabled:cursor-not-allowed disabled:opacity-50
              `,
           )}

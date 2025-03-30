@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { SpinnerOne } from '@mynaui/icons-react';
+import { toast } from 'sonner';
 
 import { FormInput } from '../common/form';
 import { AuthParams, register, login } from '../../api/auth';
@@ -16,24 +17,30 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onComplete }) => {
   const {
     actions: { setUser },
   } = useAppStore();
-
   const [params, setParams] = useState<AuthParams>({
     email: '',
     name: '',
     password: '',
   });
   const [loading, setLoading] = useState(false);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    const response = await action(params);
+    try {
+      const response = await action(params);
+      localStorage.setItem('token', response?.token!);
+      setUser(response?.user);
+      toast.success('Authentication Successful');
+      onComplete();
+    } catch (e) {
+      toast.error('Authentication Error', {
+        description: (e as Error).message
+          ? (e as Error).message
+          : 'Please try again',
+      });
+    }
     setLoading(false);
-    localStorage.setItem('token', response?.token!);
-    setUser(response?.user);
-    onComplete();
   };
-
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
     setParams({ ...params, [target.id]: target.value });
@@ -73,6 +80,12 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onComplete }) => {
         <Button
           className="font-bold capitalize bg-violet-500 text-white"
           type="submit"
+          disabled={
+            loading ||
+            !params.email ||
+            !params.password ||
+            (mode === 'register' && !params.name)
+          }
         >
           {loading ? <SpinnerOne className="animate-spin h-5 w-5" /> : mode}
         </Button>

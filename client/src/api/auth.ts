@@ -27,9 +27,7 @@ export const register = async ({ email, password, name }: AuthParams) => {
     }),
   });
   const response: AuthResponse = await request.json();
-  if (!response.token) {
-    throwIfApiError(response);
-  }
+  throwIfApiError(request, response);
   return response;
 };
 
@@ -46,13 +44,12 @@ export const login = async ({ email, password }: Omit<AuthParams, 'name'>) => {
     }),
   });
   const response: AuthResponse = await request.json();
-  if (!response.token) {
-    throwIfApiError(response);
-  }
+  throwIfApiError(request, response);
   return response;
 };
 
 export const getProfile = async () => {
+  console.log('getProfile');
   const request = await fetch(`${API_URL}/api/auth/profile`, {
     method: 'GET',
     headers: {
@@ -61,6 +58,6 @@ export const getProfile = async () => {
     },
   });
   const response: UserDocument = await request.json();
-  throwIfApiError(response);
+  throwIfApiError(request, response);
   return response;
 };

@@ -4,6 +4,7 @@ import { BookParams, createBook, listBooks, updateBook } from '../../api/book';
 import { FormInput } from '../common/form';
 import { useAppStore } from '../../lib/store';
 import { Button } from '../common/button';
+import { toast } from 'sonner';
 
 type BookFormProps = {
   mode: 'create' | 'edit';
@@ -36,19 +37,37 @@ export const BookForm: React.FC<BookFormProps> = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (mode === 'create') {
-      await createBook(params);
-      setBooks({ loading: true });
-      const data = await listBooks({});
-      setBooks({
-        loading: false,
-        list: data?.books,
-        pagination: data?.meta,
-      });
-      onComplete();
+      try {
+        await createBook(params);
+        setBooks({ loading: true });
+        const data = await listBooks({});
+        setBooks({
+          loading: false,
+          list: data?.books,
+          pagination: data?.meta,
+        });
+        toast.success('Book added');
+        onComplete();
+      } catch (e) {
+        toast.error('Error adding book', {
+          description: (e as Error).message
+            ? (e as Error).message
+            : 'Please try again',
+        });
+      }
     } else if (mode === 'edit') {
-      const response = await updateBook({ id: id!, ...params });
-      setBook(response.book);
-      onComplete();
+      try {
+        const response = await updateBook({ id: id!, ...params });
+        setBook(response.book);
+        toast.success('Book updated');
+        onComplete();
+      } catch (e) {
+        toast.error('Error updating book', {
+          description: (e as Error).message
+            ? (e as Error).message
+            : 'Please try again',
+        });
+      }
     }
   };
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {

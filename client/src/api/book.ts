@@ -33,7 +33,7 @@ export const listBooks = async ({
     },
   });
   const response: ListBooksResponse = await request.json();
-  throwIfApiError(response);
+  throwIfApiError(request, response);
   return response;
 };
 
@@ -46,7 +46,7 @@ export const getBook = async (id: string) => {
     },
   });
   const response: BookResponse = await request.json();
-  throwIfApiError(response);
+  throwIfApiError(request, response);
   return response;
 };
 
@@ -60,7 +60,7 @@ export const createBook = async (params: BookParams) => {
     body: JSON.stringify(params),
   });
   const response: BookResponse = await request.json();
-  throwIfApiError(response);
+  throwIfApiError(request, response);
   return response;
 };
 
@@ -77,7 +77,7 @@ export const updateBook = async ({
     body: JSON.stringify(params),
   });
   const response: BookResponse = await request.json();
-  throwIfApiError(response);
+  throwIfApiError(request, response);
   return response;
 };
 
@@ -90,6 +90,6 @@ export const deleteBook = async (id: string) => {
     },
   });
   const response: { message: string } = await request.json();
-  throwIfApiError(response);
+  throwIfApiError(request, response);
   return response;
 };

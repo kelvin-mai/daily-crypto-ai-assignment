@@ -14,6 +14,7 @@ import { BookDialog } from './dialog';
 import { useAppStore } from '../../lib/store';
 import { deleteBook, listBooks, updateBook } from '../../api/book';
 import { Button } from '../common/button';
+import { toast } from 'sonner';
 
 type UpdateProgressInputProps = {
   pagesRead: number;
@@ -90,20 +91,38 @@ export const BookCard: React.FC<BookCardProps> = ({
   const [loading, setLoading] = useState(false);
   const handleUpdateProgress = async () => {
     setLoading(true);
-    const response = await updateBook({ id: _id, pagesRead: page });
-    setBook(response.book);
+    try {
+      const response = await updateBook({ id: _id, pagesRead: page });
+      setBook(response.book);
+      toast.success('Book progress updated');
+    } catch (e) {
+      toast.error('Error updating book progress', {
+        description: (e as Error).message
+          ? (e as Error).message
+          : 'Please try again',
+      });
+    }
     setLoading(false);
   };
   const handleDelete = async () => {
     setLoading(true);
-    await deleteBook(_id);
-    setBooks({ loading: true });
-    const data = await listBooks({});
-    setBooks({
-      loading: false,
-      list: data?.books,
-      pagination: data?.meta,
-    });
+    try {
+      await deleteBook(_id);
+      setBooks({ loading: true });
+      const data = await listBooks({});
+      setBooks({
+        loading: false,
+        list: data?.books,
+        pagination: data?.meta,
+      });
+      toast.success('Book deleted');
+    } catch (e) {
+      toast.error('Error deleting book', {
+        description: (e as Error).message
+          ? (e as Error).message
+          : 'Please try again',
+      });
+    }
     setLoading(false);
   };
   return (

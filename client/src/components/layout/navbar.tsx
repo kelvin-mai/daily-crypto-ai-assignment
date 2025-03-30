@@ -21,6 +21,10 @@ const Avatar: React.FC<AvatarProps> = ({ email, name }) => {
   const {
     actions: { logout },
   } = useAppStore();
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem('token');
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,7 +40,7 @@ const Avatar: React.FC<AvatarProps> = ({ email, name }) => {
           <p>{name}</p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => logout()}>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
