@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { BookParams, createBook, listBooks, updateBook } from '../../api/book';
 import { FormInput } from '../common/form';
 import { useAppStore } from '../../lib/store';
+import { Button } from '../common/button';
 
 type BookFormProps = {
   mode: 'create' | 'edit';
@@ -93,12 +94,9 @@ export const BookForm: React.FC<BookFormProps> = ({
             onChange={handleChange}
           />
         </div>
-        <button
-          className="w-full bg-violet-500 text-white py-2 px-4 rounded shadow capitalize"
-          type="submit"
-        >
+        <Button className="bg-violet-500 text-white capitalize" type="submit">
           {mode}
-        </button>
+        </Button>
       </div>
     </form>
   );

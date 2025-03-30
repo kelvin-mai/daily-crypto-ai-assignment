@@ -8,11 +8,12 @@ import {
 } from '@mynaui/icons-react';
 import { motion, useMotionTemplate, useMotionValue } from 'motion/react';
 
-import { BookDocument } from '../../lib/types/api';
+import type { BookDocument } from '../../lib/types/api';
 import { Progress } from '../common/progress';
 import { BookDialog } from './dialog';
 import { useAppStore } from '../../lib/store';
-import { updateBook } from '../../api/book';
+import { deleteBook, listBooks, updateBook } from '../../api/book';
+import { Button } from '../common/button';
 
 type UpdateProgressInputProps = {
   pagesRead: number;
@@ -82,7 +83,7 @@ export const BookCard: React.FC<BookCardProps> = ({
 }) => {
   const percentage = Math.round((pagesRead / totalPages) * 100);
   const {
-    actions: { setBook },
+    actions: { setBooks, setBook },
   } = useAppStore();
   const [page, setPage] = useState(pagesRead);
   const [loading, setLoading] = useState(false);
@@ -92,11 +93,23 @@ export const BookCard: React.FC<BookCardProps> = ({
     setBook(response.book);
     setLoading(false);
   };
+  const handleDelete = async () => {
+    setLoading(true);
+    await deleteBook(_id);
+    setBooks({ loading: true });
+    const data = await listBooks({});
+    setBooks({
+      loading: false,
+      list: data?.books,
+      pagination: data?.meta,
+    });
+    setLoading(false);
+  };
   return (
-    <div className="p-4 rounded-lg shadow-md flex-col space-y-2">
+    <div className="p-4 rounded-lg shadow-md space-y-2">
       <div className="flex justify-between items-start">
         <h4 className="text-xl font-semibold">{title}</h4>
-        <div className="inline-flex items-center rounded-xl border px-2 text-sm font-semibold text-white bg-teal-500 w-16">
+        <div className="inline-flex items-center justify-center rounded-xl border px-2 text-sm font-semibold text-white bg-teal-500 w-16">
           {percentage} %
         </div>
       </div>
@@ -127,7 +140,7 @@ export const BookCard: React.FC<BookCardProps> = ({
           value={page}
           onChange={setPage}
         />
-        <button type="button" onClick={handleUpdateProgress}>
+        <button type="button" onClick={handleUpdateProgress} disabled={loading}>
           {loading ? (
             <SpinnerOne className="animate-spin h-6 w-6" />
           ) : (
@@ -135,14 +148,25 @@ export const BookCard: React.FC<BookCardProps> = ({
           )}
         </button>
       </div>
-      <BookDialog
-        action="edit"
-        id={_id}
-        title={title}
-        author={author}
-        pagesRead={pagesRead}
-        totalPages={totalPages}
-      />
+      <div className="flex gap-2">
+        <BookDialog
+          action="edit"
+          id={_id}
+          title={title}
+          author={author}
+          pagesRead={pagesRead}
+          totalPages={totalPages}
+          disabled={loading}
+        />
+        <Button
+          className="w-full bg-pink-700 text-white"
+          type="button"
+          onClick={handleDelete}
+          disabled={loading}
+        >
+          Delete
+        </Button>
+      </div>
     </div>
   );
 };

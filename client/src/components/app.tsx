@@ -36,7 +36,17 @@ export const App = () => {
       <Navbar />
       <main className="py-4">
         <div className="container">
-          {initialized && user && <BooksContainer />}
+          {initialized &&
+            (user ? (
+              <BooksContainer />
+            ) : (
+              <div className="mt-8 p-8 rounded-lg shadow-md w-full h-72 flex justify-center items-center">
+                <h4 className="text-xl">
+                  You are currently not logged in, please log in to continue
+                  using the platform.
+                </h4>
+              </div>
+            ))}
         </div>
       </main>
     </div>

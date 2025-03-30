@@ -14,6 +14,7 @@ import { Button } from '../common/button';
 
 type BookDialogProps = {
   action: 'create' | 'edit';
+  disabled?: boolean;
   className?: string;
   id?: string;
   title?: string;
@@ -24,10 +25,10 @@ type BookDialogProps = {
 
 export const BookDialog: React.FC<BookDialogProps> = ({
   action,
+  disabled,
   className,
   ...props
 }) => {
-  console.log('book dialog', props);
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -37,6 +38,7 @@ export const BookDialog: React.FC<BookDialogProps> = ({
             'capitalize font-semibold text-white bg-violet-500 w-full',
             className,
           )}
+          disabled={disabled}
         >
           {action}
         </Button>
