@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from '../common/dialog';
 import { AuthForm } from './form';
+import { Button } from '../common/button';
 
 type AuthDialogProps = {
   action: 'register' | 'login';
@@ -24,14 +25,9 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button
-          className={cn(
-            'px-4 py-2 rounded hover:cursor-pointer capitalize font-semibold',
-            className,
-          )}
-        >
+        <Button className={cn('capitalize font-semibold', className)}>
           {action}
-        </button>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>

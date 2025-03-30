@@ -1,5 +1,6 @@
 import { API_URL } from '../lib/utils/env';
-import { BookDocument, BooksPagination } from '../lib/types/api';
+import type { BookDocument, BooksPagination } from '../lib/types/api';
+import { throwIfApiError } from '../lib/utils/api';
 
 const baseUrl = `${API_URL}/api/books`;
 
@@ -8,10 +9,14 @@ type ListBooksResponse = {
   meta: BooksPagination;
 };
 
-export type BookParams = {
-  title: string;
-  author: string;
+type BookResponse = {
+  book: BookDocument;
 };
+
+export type BookParams = Omit<
+  BookDocument,
+  '_id' | 'owner' | 'createdAt' | 'updatedAt' | '__v'
+>;
 
 export const listBooks = async ({
   page = 1,
@@ -20,86 +25,71 @@ export const listBooks = async ({
   page?: number;
   limit?: number;
 }) => {
-  try {
-    const request = await fetch(`${baseUrl}/?page=${page}&limit=${limit}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
-    const response: ListBooksResponse = await request.json();
-    return response;
-  } catch (e) {
-    console.log(e);
-  }
+  const request = await fetch(`${baseUrl}/?page=${page}&limit=${limit}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+  const response: ListBooksResponse = await request.json();
+  throwIfApiError(response);
+  return response;
 };
 
 export const getBook = async (id: string) => {
-  try {
-    const request = await fetch(`${baseUrl}/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
-    const response: BookDocument = await request.json();
-    return response;
-  } catch (e) {
-    console.log(e);
-  }
+  const request = await fetch(`${baseUrl}/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+  const response: BookResponse = await request.json();
+  throwIfApiError(response);
+  return response;
 };
 
 export const createBook = async (params: BookParams) => {
-  try {
-    const request = await fetch(`${baseUrl}/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-      body: JSON.stringify(params),
-    });
-    const response: BookDocument = await request.json();
-    return response;
-  } catch (e) {
-    console.log(e);
-  }
+  const request = await fetch(`${baseUrl}/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+    body: JSON.stringify(params),
+  });
+  const response: BookResponse = await request.json();
+  throwIfApiError(response);
+  return response;
 };
 
 export const updateBook = async ({
   id,
   ...params
 }: Partial<BookParams> & { id: string }) => {
-  try {
-    const request = await fetch(`${baseUrl}/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-      body: JSON.stringify(params),
-    });
-    const response: BookDocument = await request.json();
-    return response;
-  } catch (e) {
-    console.log(e);
-  }
+  const request = await fetch(`${baseUrl}/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+    body: JSON.stringify(params),
+  });
+  const response: BookResponse = await request.json();
+  throwIfApiError(response);
+  return response;
 };
 
 export const deleteBook = async (id: string) => {
-  try {
-    const request = await fetch(`${baseUrl}/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
-    const response: { message: string } = await request.json();
-    return response;
-  } catch (e) {
-    console.log(e);
-  }
+  const request = await fetch(`${baseUrl}/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+  const response: { message: string } = await request.json();
+  throwIfApiError(response);
+  return response;
 };

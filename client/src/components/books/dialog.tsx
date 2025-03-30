@@ -10,35 +10,43 @@ import {
   DialogTrigger,
 } from '../common/dialog';
 import { BookForm } from './form';
+import { Button } from '../common/button';
 
 type BookDialogProps = {
   action: 'create' | 'edit';
   className?: string;
+  id?: string;
+  title?: string;
+  author?: string;
+  totalPages?: number;
+  pagesRead?: number;
 };
 
 export const BookDialog: React.FC<BookDialogProps> = ({
   action,
   className,
+  ...props
 }) => {
+  console.log('book dialog', props);
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button
+        <Button
           className={cn(
-            'px-4 py-2 rounded hover:cursor-pointer capitalize font-semibold',
+            'capitalize font-semibold text-white bg-violet-500 w-full',
             className,
           )}
         >
           {action}
-        </button>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
           <DialogTitle>Book</DialogTitle>
           <DialogDescription>Create a book.</DialogDescription>
         </DialogHeader>
-        <BookForm mode={action} onComplete={() => setOpen(false)} />
+        <BookForm mode={action} onComplete={() => setOpen(false)} {...props} />
       </DialogContent>
     </Dialog>
   );

@@ -1,3 +1,7 @@
+export type ApiError = {
+  message: string;
+};
+
 export type AuthUser = {
   email: string;
   id: string;
@@ -20,6 +24,8 @@ export type BookDocument = {
   title: string;
   author: string;
   owner: string;
+  totalPages: number;
+  pagesRead: number;
 } & Document;
 
 export type BooksPagination = {

@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import { SpinnerOne } from '@mynaui/icons-react';
 
 import { FormInput } from '../common/form';
 import { AuthParams, register, login } from '../../api/auth';
 import { useAppStore } from '../../lib/store';
-import { SpinnerOne } from '@mynaui/icons-react';
+import { Button } from '../common/button';
 
 type AuthFormProps = {
   mode: 'register' | 'login';
@@ -69,12 +70,12 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onComplete }) => {
           value={params.password}
           onChange={handleChange}
         />
-        <button
-          className="w-full bg-violet-500 text-white py-2 px-4 rounded shadow capitalize flex justify-center items-center"
+        <Button
+          className="font-bold capitalize bg-violet-500 text-white"
           type="submit"
         >
-          {loading ? <SpinnerOne className="animate-spin" /> : mode}
-        </button>
+          {loading ? <SpinnerOne className="animate-spin h-5 w-5" /> : mode}
+        </Button>
       </div>
     </form>
   );

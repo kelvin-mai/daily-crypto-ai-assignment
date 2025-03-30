@@ -91,7 +91,7 @@ const seed = async () => {
       title: 'Twilight',
       author: 'Stephanie Meyer',
       totalPages: 498,
-      pageRead: 1,
+      pagesRead: 1,
     },
   ].map((b) => ({ ...b, owner: user._id }));
 

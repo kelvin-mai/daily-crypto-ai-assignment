@@ -22,6 +22,8 @@ type AppStore = {
     setInitialized(v: boolean): void;
     setUser(user?: UserDocument | AuthUser): void;
     setBooks(books: BooksState): void;
+    setBook(book: BookDocument): void;
+    logout(): void;
   };
 };
 
@@ -40,6 +42,17 @@ export const useAppStore = create<AppStore>((set) => ({
     },
     setBooks: (booksState) => {
       set({ books: booksState });
+    },
+    setBook: (book) =>
+      set((state) => ({
+        ...state,
+        books: {
+          ...state.books,
+          list: state.books.list?.map((b) => (b._id === book._id ? book : b)),
+        },
+      })),
+    logout: () => {
+      set({ user: undefined, books: { loading: false } });
     },
   },
 }));
