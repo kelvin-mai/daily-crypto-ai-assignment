@@ -1,11 +1,16 @@
 import { API_URL } from '../lib/utils/env';
-import type { BookDocument, BooksPagination } from '../lib/types/api';
+import type {
+  BookDocument,
+  BooksPagination,
+  BookStatistics,
+} from '../lib/types/api';
 import { throwIfApiError } from '../lib/utils/api';
 
 const baseUrl = `${API_URL}/api/books`;
 
 type ListBooksResponse = {
   books: BookDocument[];
+  statistics: BookStatistics;
   meta: BooksPagination;
 };
 

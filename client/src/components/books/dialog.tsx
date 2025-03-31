@@ -48,8 +48,9 @@ export const BookDialog: React.FC<BookDialogProps> = ({
           <DialogTitle>Book</DialogTitle>
           <DialogDescription>
             {action === 'create'
-              ? 'Add a new book to your collection'
-              : 'Edit the book details'}
+              ? 'Add a new book to your collection. '
+              : 'Edit the book details. '}
+            Please fill out all the fields to complete the form.
           </DialogDescription>
         </DialogHeader>
         <BookForm mode={action} onComplete={() => setOpen(false)} {...props} />

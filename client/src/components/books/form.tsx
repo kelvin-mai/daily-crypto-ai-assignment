@@ -100,6 +100,7 @@ export const BookForm: React.FC<BookFormProps> = ({
             id="pagesRead"
             label="Pages Read"
             placeholder="0"
+            min={0}
             type="number"
             value={params.pagesRead}
             onChange={handleChange}
@@ -108,12 +109,22 @@ export const BookForm: React.FC<BookFormProps> = ({
             id="totalPages"
             label="Total Pages"
             placeholder="420"
+            min={0}
             type="number"
             value={params.totalPages}
             onChange={handleChange}
           />
         </div>
-        <Button className="bg-violet-500 text-white capitalize" type="submit">
+        <Button
+          className="bg-violet-500 text-white capitalize"
+          type="submit"
+          disabled={
+            !params.title ||
+            !params.author ||
+            !params.totalPages ||
+            params.totalPages < 1
+          }
+        >
           {mode}
         </Button>
       </div>

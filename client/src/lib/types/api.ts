@@ -28,6 +28,13 @@ export type BookDocument = {
   pagesRead: number;
 } & Document;
 
+export type BookStatistics = {
+  completed: number;
+  total: number;
+  totalPages: number;
+  totalPagesRead: number;
+};
+
 export type BooksPagination = {
   currentPage: number;
   pageSize: number;

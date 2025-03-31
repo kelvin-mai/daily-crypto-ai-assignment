@@ -3,22 +3,29 @@ import {
   AuthUser,
   BookDocument,
   BooksPagination,
+  BookStatistics,
   UserDocument,
 } from '../types/api';
 
 type BooksState =
-  | { loading: boolean }
-  | { loading: false; list: BookDocument[]; pagination: BooksPagination };
+  | {
+      loading: boolean;
+      statistics?: BookStatistics;
+      list?: BookDocument[];
+      pagination?: BooksPagination;
+    }
+  | {
+      loading: false;
+      statistics: BookStatistics;
+      list: BookDocument[];
+      pagination: BooksPagination;
+    };
 
 type AppStore = {
   initialized: boolean;
   theme: 'light' | 'dark';
   user?: UserDocument | AuthUser;
-  books: {
-    loading: boolean;
-    list?: BookDocument[];
-    pagination?: BooksPagination;
-  };
+  books: BooksState;
   actions: {
     setInitialized(v: boolean): void;
     setTheme(v: 'light' | 'dark'): void;

@@ -38,6 +38,7 @@ export const BookPagination = () => {
     setBooks({
       loading: false,
       list: data?.books || [],
+      statistics: data?.statistics,
       pagination: data?.meta,
     });
   };

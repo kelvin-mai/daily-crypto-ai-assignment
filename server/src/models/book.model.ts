@@ -15,19 +15,25 @@ const bookSchema = new Schema<IBook>(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, 'Title is required'],
     },
     author: {
       type: String,
-      required: true,
+      required: [true, 'Author is required'],
     },
     totalPages: {
       type: Number,
-      required: true,
+      required: [true, 'Total pages is required'],
     },
     pagesRead: {
       type: Number,
       default: 0,
+      validate: {
+        validator: function (value: number): boolean {
+          return value <= (this as unknown as IBook).totalPages;
+        },
+        message: 'Pages read must be less than or equal to total pages',
+      },
     },
     owner: {
       type: mongoose.Schema.ObjectId,

@@ -49,7 +49,6 @@ export const login = async ({ email, password }: Omit<AuthParams, 'name'>) => {
 };
 
 export const getProfile = async () => {
-  console.log('getProfile');
   const request = await fetch(`${API_URL}/api/auth/profile`, {
     method: 'GET',
     headers: {

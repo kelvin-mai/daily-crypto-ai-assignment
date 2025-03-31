@@ -17,6 +17,7 @@ import {
 import { BookTableRow } from './table-row';
 import { BookUser, ClockCircle } from '@mynaui/icons-react';
 import { BookPagination } from './pagination';
+import { BookStatistics } from './statistics';
 
 type BookViewProps = {
   books: BookDocument[];
@@ -76,6 +77,7 @@ export const BooksContainer: React.FC<BooksContainerProps> = () => {
     setBooks({
       loading: false,
       list: data?.books || [],
+      statistics: data?.statistics,
       pagination: data?.meta,
     });
   };
@@ -102,6 +104,7 @@ export const BooksContainer: React.FC<BooksContainerProps> = () => {
           <Skeleton className="h-64" />
         </div>
       )}
+      <BookStatistics />
       {books.list && books.list.length > 0 && (
         <>
           <Tabs

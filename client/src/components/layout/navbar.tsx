@@ -11,6 +11,7 @@ import {
 import { AuthDialog } from '../auth/dialog';
 import { useAppStore } from '../../lib/store';
 import { Switch } from '../common/switch';
+import { toast } from 'sonner';
 
 type AvatarProps = {
   email: string;
@@ -24,6 +25,7 @@ const Avatar: React.FC<AvatarProps> = ({ email, name }) => {
   const handleLogout = () => {
     logout();
     localStorage.removeItem('token');
+    toast.success('You have been logged out.');
   };
   return (
     <DropdownMenu>

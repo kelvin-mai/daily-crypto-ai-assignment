@@ -1,4 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
+import mongoose from 'mongoose';
+
 import Book from '../models/book.model';
 
 export const listBooks = async (
@@ -17,18 +19,58 @@ export const listBooks = async (
       .limit(limit)
       .sort({ createdAt: -1 });
 
-    const total = await Book.countDocuments();
-    const pages = Math.ceil(total / limit);
+    if (books.length <= 0) {
+      res.json({
+        books,
+        statistics: undefined,
+        meta: {
+          total: 0,
+          pages: 1,
+          currentPage: page,
+          pageSize: limit,
+        },
+      });
+    } else {
+      const stats = await Book.aggregate([
+        {
+          $match: {
+            owner: new mongoose.Types.ObjectId(req.user?.userId),
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            completed: {
+              $cond: [{ $eq: ['$pagesRead', '$totalPages'] }, 1, 0],
+            },
+            totalPages: '$totalPages',
+            pagesRead: '$pagesRead',
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: 1 },
+            completed: { $sum: '$completed' },
+            totalPages: { $sum: '$totalPages' },
+            totalPagesRead: { $sum: '$pagesRead' },
+          },
+        },
+      ]);
+      const total = stats[0].total;
+      const pages = Math.ceil(total / limit);
 
-    res.json({
-      books,
-      meta: {
-        total,
-        pages,
-        currentPage: page,
-        pageSize: books.length,
-      },
-    });
+      res.json({
+        books,
+        statistics: stats[0],
+        meta: {
+          total,
+          pages,
+          currentPage: page,
+          pageSize: limit,
+        },
+      });
+    }
   } catch (e) {
     next(e);
   }
