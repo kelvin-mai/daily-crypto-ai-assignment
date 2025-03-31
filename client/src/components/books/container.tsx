@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BookUser, ClockCircle } from '@mynaui/icons-react';
+import { BookUser, ClockCircle, PlusSolid } from '@mynaui/icons-react';
 
 import { listBooks } from '../../api/book';
 import type { BookDocument } from '../../lib/types/api';
@@ -13,11 +13,11 @@ import {
   TableHeader,
   TableRow,
 } from '../common/table';
-import { BookDialog } from './dialog';
 import { BookCard } from './card';
 import { BookTableRow } from './table-row';
 import { BookPagination } from './pagination';
 import { BookStatistics } from './statistics';
+import { BookFormDialog } from './form';
 
 type BookViewProps = {
   books: BookDocument[];
@@ -63,9 +63,7 @@ const TableView: React.FC<BookViewProps> = ({ books }) => {
   );
 };
 
-type BooksContainerProps = {};
-
-export const BooksContainer: React.FC<BooksContainerProps> = () => {
+export const BooksContainer = () => {
   const {
     books,
     actions: { setBooks },
@@ -73,7 +71,7 @@ export const BooksContainer: React.FC<BooksContainerProps> = () => {
   const [view, setView] = useState('cards');
   const loadBooks = async () => {
     setBooks({ loading: true });
-    const data = await listBooks({});
+    const data = await listBooks();
     setBooks({
       loading: false,
       list: data?.books || [],
@@ -95,7 +93,15 @@ export const BooksContainer: React.FC<BooksContainerProps> = () => {
             Track your reading progress across all your books
           </p>
         </div>
-        <BookDialog action="create" />
+        <BookFormDialog
+          mode="create"
+          className="bg-teal-500 text-white text-xl"
+        >
+          <>
+            <PlusSolid className="h-8 w-8" />
+            <span>Create</span>
+          </>
+        </BookFormDialog>
       </div>
       {books.loading && (
         <div className="grid grid-cols-3 gap-4">

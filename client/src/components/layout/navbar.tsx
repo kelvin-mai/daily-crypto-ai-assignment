@@ -2,8 +2,8 @@ import { BookCheckSolid, SpinnerOne, Sun, Moon } from '@mynaui/icons-react';
 
 import { useAppEffects, useAppStore } from '../../lib/store';
 import { Switch } from '../common/switch';
-import { AuthDialog } from '../auth/dialog';
 import { Avatar } from '../auth/avatar';
+import { AuthFormDialog } from '../auth/form';
 
 export const Navbar = () => {
   const { initialized, user, theme } = useAppStore();
@@ -21,14 +21,18 @@ export const Navbar = () => {
               <Avatar {...user} />
             ) : (
               <>
-                <AuthDialog
-                  action="login"
+                <AuthFormDialog
+                  mode="login"
                   className="bg-teal-500 text-white font-bold"
-                />
-                <AuthDialog
-                  action="register"
+                >
+                  Login
+                </AuthFormDialog>
+                <AuthFormDialog
+                  mode="register"
                   className="bg-violet-500 text-white font-bold"
-                />
+                >
+                  Register
+                </AuthFormDialog>
               </>
             )
           ) : (

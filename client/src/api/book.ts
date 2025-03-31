@@ -23,13 +23,15 @@ export type BookParams = Omit<
   '_id' | 'owner' | 'createdAt' | 'updatedAt' | '__v'
 >;
 
-export const listBooks = async ({
-  page = 1,
-  limit = 10,
-}: {
-  page?: number;
-  limit?: number;
-}) => {
+export const listBooks = async (
+  {
+    page,
+    limit,
+  }: {
+    page?: number;
+    limit?: number;
+  } = { page: 1, limit: 10 },
+) => {
   const request = await fetch(`${baseUrl}/?page=${page}&limit=${limit}`, {
     method: 'GET',
     headers: {

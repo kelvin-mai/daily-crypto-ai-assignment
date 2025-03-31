@@ -4,8 +4,17 @@ import { toast } from 'sonner';
 
 import type { AuthParams } from '../../api/auth';
 import { useAppEffects } from '../../lib/store';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../common/dialog';
 import { FormInput } from '../common/form';
 import { Button } from '../common/button';
+import { cn } from '../../lib/utils';
 
 type AuthFormProps = {
   mode: 'register' | 'login';
@@ -86,5 +95,42 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onComplete }) => {
         </Button>
       </div>
     </form>
+  );
+};
+
+type AuthFormDialogProps = Omit<AuthFormProps, 'onComplete'> & {
+  className?: string;
+  disabled?: boolean;
+  children: React.ReactNode;
+};
+
+export const AuthFormDialog: React.FC<AuthFormDialogProps> = ({
+  mode,
+  className,
+  disabled,
+  children,
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          className={cn('capitalize font-semibold', className)}
+          disabled={disabled}
+        >
+          {children}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px] bg-white">
+        <DialogHeader>
+          <DialogTitle>Authentication</DialogTitle>
+          <DialogDescription>
+            Please log into your account or sign up for a new one before using
+            this platform.
+          </DialogDescription>
+        </DialogHeader>
+        <AuthForm mode={mode} onComplete={() => setOpen(false)} />
+      </DialogContent>
+    </Dialog>
   );
 };

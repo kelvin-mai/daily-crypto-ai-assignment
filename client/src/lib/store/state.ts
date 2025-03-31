@@ -36,3 +36,11 @@ export const initialState: AppState = {
     loading: true,
   },
 };
+
+export type Setter = (
+  partial:
+    | AppState
+    | Partial<AppState>
+    | ((state: AppState) => AppState | Partial<AppState>),
+  replace?: false,
+) => void;

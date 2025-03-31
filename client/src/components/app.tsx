@@ -13,7 +13,7 @@ export const App = () => {
     if (!initialized) {
       initialize();
     }
-  }, [initialized]);
+  }, [initialized, initialize]);
 
   return (
     <div className="min-h-screen dark:bg-slate-800 dark:text-white">

@@ -3,8 +3,17 @@ import { toast } from 'sonner';
 
 import { BookParams, updateBook } from '../../api/book';
 import { useAppEffects, useAppStore } from '../../lib/store';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../common/dialog';
 import { FormInput } from '../common/form';
 import { Button } from '../common/button';
+import { cn } from '../../lib/utils';
 
 type BookFormProps = {
   mode: 'create' | 'edit';
@@ -123,5 +132,45 @@ export const BookForm: React.FC<BookFormProps> = ({
         </Button>
       </div>
     </form>
+  );
+};
+
+type BookFormDialogProps = Omit<BookFormProps, 'onComplete'> & {
+  className?: string;
+  disabled?: boolean;
+  children: React.ReactNode;
+};
+
+export const BookFormDialog: React.FC<BookFormDialogProps> = ({
+  className,
+  disabled,
+  mode,
+  children,
+  ...props
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          className={cn('capitalize font-semibold', className)}
+          disabled={disabled}
+        >
+          {children}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px] bg-white">
+        <DialogHeader>
+          <DialogTitle>Book</DialogTitle>
+          <DialogDescription>
+            {mode === 'create'
+              ? 'Add a new book to your collection. '
+              : 'Edit the book details. '}
+            Please fill out all the fields to complete the form.
+          </DialogDescription>
+        </DialogHeader>
+        <BookForm mode={mode} onComplete={() => setOpen(false)} {...props} />
+      </DialogContent>
+    </Dialog>
   );
 };

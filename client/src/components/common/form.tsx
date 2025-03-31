@@ -13,49 +13,54 @@ export const Label = React.forwardRef<
     ref={ref}
     className={cn(
       'text-sm font-medium text-black dark:text-white leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+      className,
     )}
     {...props}
   />
 ));
 Label.displayName = LabelPrimitive.Root.displayName;
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+export const Input = React.forwardRef<
+  HTMLInputElement,
+  React.ComponentProps<'input'>
+>(({ className, type, ...props }, ref) => {
+  const radius = 100;
+  const { theme } = useAppStore();
+  const [visible, setVisible] = React.useState(false);
 
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
-    const radius = 100;
-    const { theme } = useAppStore();
-    const [visible, setVisible] = React.useState(false);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
-    let mouseX = useMotionValue(0);
-    let mouseY = useMotionValue(0);
+  const handleMouseMove = ({
+    currentTarget,
+    clientX,
+    clientY,
+  }: React.MouseEvent) => {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  };
 
-    const handleMouseMove = ({ currentTarget, clientX, clientY }: any) => {
-      let { left, top } = currentTarget.getBoundingClientRect();
-      mouseX.set(clientX - left);
-      mouseY.set(clientY - top);
-    };
-
-    return (
-      <motion.div
-        style={{
-          background: useMotionTemplate`
+  return (
+    <motion.div
+      style={{
+        background: useMotionTemplate`
         radial-gradient(
           ${visible ? radius + 'px' : '0px'} circle at ${mouseX}px ${mouseY}px,
           ${theme === 'dark' ? '#14b8a6' : '#8b5cf6'},
           transparent 80%
         )`,
-        }}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setVisible(true)}
-        onMouseLeave={() => setVisible(false)}
-        className="group/input rounded-lg p-[2px] transition duration-300"
-      >
-        <input
-          type={type}
-          ref={ref}
-          className={cn(
-            `shadow-input
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setVisible(true)}
+      onMouseLeave={() => setVisible(false)}
+      className="group/input rounded-lg p-[2px] transition duration-300"
+    >
+      <input
+        type={type}
+        ref={ref}
+        className={cn(
+          `shadow-input
              flex h-10 w-full rounded-md border-none bg-gray-50 px-3 py-2 text-sm text-black transition duration-400 group-hover/input:shadow-none
              file:border-0 file:bg-transparent file:text-sm file:font-medium
            placeholder:text-neutral-400
@@ -63,19 +68,17 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
              dark:focus-visible:ring-teal-400
              disabled:cursor-not-allowed disabled:opacity-50
              `,
-          )}
-          {...props}
-        />
-      </motion.div>
-    );
-  },
-);
+          className,
+        )}
+        {...props}
+      />
+    </motion.div>
+  );
+});
 
-export const FormInput: React.FC<InputProps & { label: string }> = ({
-  label,
-  className,
-  ...props
-}) => {
+export const FormInput: React.FC<
+  React.ComponentProps<'input'> & { label: string }
+> = ({ label, className, ...props }) => {
   return (
     <div className={cn('flex w-full flex-col space-y-2', className)}>
       <Label htmlFor={props.id}>{label}</Label>

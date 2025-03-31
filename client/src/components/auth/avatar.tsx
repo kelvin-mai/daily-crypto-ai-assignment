@@ -24,7 +24,7 @@ export const Avatar: React.FC<AvatarProps> = ({ email, name }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="uppercase flex h-8 w-8 items-center justify-center rounded-full bg-violet-400 text-white font-bold">
+        <div className="uppercase flex h-8 w-8 items-center justify-center rounded-full bg-violet-500 text-white font-bold">
           <span>{name[0]}</span>
         </div>
       </DropdownMenuTrigger>

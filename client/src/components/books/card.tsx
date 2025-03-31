@@ -14,7 +14,7 @@ import { updateBook } from '../../api/book';
 import { useAppActions, useAppEffects, useAppStore } from '../../lib/store';
 import { Progress } from '../common/progress';
 import { Button } from '../common/button';
-import { BookDialog } from './dialog';
+import { BookFormDialog } from './form';
 
 type UpdateProgressInputProps = {
   pagesRead: number;
@@ -33,11 +33,15 @@ const UpdateProgressInput: React.FC<UpdateProgressInputProps> = ({
   const [visible, setVisible] = useState(false);
   const { theme } = useAppStore();
 
-  let mouseX = useMotionValue(0);
-  let mouseY = useMotionValue(0);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
-  const handleMouseMove = ({ currentTarget, clientX, clientY }: any) => {
-    let { left, top } = currentTarget.getBoundingClientRect();
+  const handleMouseMove = ({
+    currentTarget,
+    clientX,
+    clientY,
+  }: React.MouseEvent) => {
+    const { left, top } = currentTarget.getBoundingClientRect();
     mouseX.set(clientX - left);
     mouseY.set(clientY - top);
   };
@@ -176,16 +180,18 @@ export const BookCard: React.FC<BookCardProps> = ({
         </button>
       </div>
       <div className="flex gap-2">
-        <BookDialog
-          action="edit"
-          className="w-full"
+        <BookFormDialog
+          mode="edit"
+          className="w-full bg-teal-500 text-white"
           id={_id}
           title={title}
           author={author}
           pagesRead={pagesRead}
           totalPages={totalPages}
           disabled={loading}
-        />
+        >
+          Edit
+        </BookFormDialog>
         <Button
           className="w-full bg-pink-700 text-white"
           type="button"

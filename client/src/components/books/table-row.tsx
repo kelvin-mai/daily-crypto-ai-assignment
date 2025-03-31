@@ -5,7 +5,7 @@ import { useAppEffects } from '../../lib/store';
 import { Button } from '../common/button';
 import { Progress } from '../common/progress';
 import { TableCell, TableRow } from '../common/table';
-import { BookDialog } from './dialog';
+import { BookFormDialog } from './form';
 
 type BookTableRowProps = BookDocument & {};
 
@@ -36,16 +36,18 @@ export const BookTableRow: React.FC<BookTableRowProps> = ({
       </TableCell>
       <TableCell>
         <div className="flex gap-2">
-          <BookDialog
-            className="w-full"
-            action="edit"
+          <BookFormDialog
+            className="w-full bg-teal-500 text-white"
+            mode="edit"
             id={_id}
             title={title}
             author={author}
             pagesRead={pagesRead}
             totalPages={totalPages}
             disabled={loading}
-          />
+          >
+            Edit
+          </BookFormDialog>
           <Button
             className="w-full bg-pink-700 text-white"
             type="button"

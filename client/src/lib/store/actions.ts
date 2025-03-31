@@ -1,5 +1,5 @@
 import { AuthUser, BookDocument, UserDocument } from '../types/api';
-import { AppState, BooksState } from './state';
+import { AppState, BooksState, Setter } from './state';
 
 export type AppActions = {
   setInitialized(v: boolean): void;
@@ -10,7 +10,7 @@ export type AppActions = {
   setSelectedPageSize(n: number): void;
 };
 
-export const createActions = (set: any): AppActions => ({
+export const createActions = (set: Setter): AppActions => ({
   setInitialized: (v: boolean) => {
     set({ initialized: v });
   },

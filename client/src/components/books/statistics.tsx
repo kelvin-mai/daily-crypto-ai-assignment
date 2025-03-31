@@ -1,3 +1,5 @@
+import { motion } from 'motion/react';
+
 import { useAppStore } from '../../lib/store';
 import { Progress } from '../common/progress';
 
@@ -7,7 +9,13 @@ export const BookStatistics = () => {
   } = useAppStore();
   if (!statistics) return null;
   return (
-    <div className="p-4 rounded-lg shadow-md space-y-2 dark:bg-slate-700 mb-4">
+    <motion.div
+      className="p-4 rounded-lg shadow-md space-y-2 dark:bg-slate-700 mb-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3, delay: 0.1 }}
+    >
       <h2 className="text-2xl font-bold">Overall Progress</h2>
       <div>
         <Progress
@@ -27,6 +35,6 @@ export const BookStatistics = () => {
           {statistics.completed} / {statistics.total} books completed
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

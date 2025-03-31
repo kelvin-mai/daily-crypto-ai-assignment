@@ -5,7 +5,7 @@ import {
   deleteBook,
   listBooks,
 } from '../../api/book';
-import { AppState } from './state';
+import { AppState, Setter } from './state';
 import { AppActions } from './actions';
 
 export type AppEffects = {
@@ -24,7 +24,7 @@ type Getter = () => AppState & {
   actions: AppActions;
 };
 
-export const createEffects = (set: any, get: Getter): AppEffects => ({
+export const createEffects = (set: Setter, get: Getter): AppEffects => ({
   initialize: async () => {
     const { setUser, setTheme, setInitialized } = get().actions;
     try {
@@ -41,8 +41,9 @@ export const createEffects = (set: any, get: Getter): AppEffects => ({
         localStorage.setItem('vite-ui-theme', 'light');
         setTheme('light');
       }
-    } catch (err) {
+    } catch (e) {
       localStorage.removeItem('token');
+      throw e;
     } finally {
       setInitialized(true);
     }
@@ -52,7 +53,7 @@ export const createEffects = (set: any, get: Getter): AppEffects => ({
     try {
       const action = mode === 'register' ? register : login;
       const response = await action(params);
-      localStorage.setItem('token', response?.token!);
+      localStorage.setItem('token', response?.token);
       const profile = await getProfile();
       setUser(profile);
     } catch (e) {
@@ -83,35 +84,27 @@ export const createEffects = (set: any, get: Getter): AppEffects => ({
       selectedPageSize,
       actions: { setBooks },
     } = get();
-    try {
-      await createBook(params);
-      setBooks({ loading: true });
-      const response = await listBooks({ limit: selectedPageSize });
-      setBooks({
-        loading: false,
-        list: response?.books,
-        pagination: response?.meta,
-      });
-    } catch (e) {
-      throw e;
-    }
+    await createBook(params);
+    setBooks({ loading: true });
+    const response = await listBooks({ limit: selectedPageSize });
+    setBooks({
+      loading: false,
+      list: response?.books,
+      pagination: response?.meta,
+    });
   },
   deleteBookAndRefetch: async (id) => {
     const {
       selectedPageSize,
       actions: { setBooks },
     } = get();
-    try {
-      setBooks({ loading: true });
-      await deleteBook(id);
-      const response = await listBooks({ limit: selectedPageSize });
-      setBooks({
-        loading: false,
-        list: response?.books,
-        pagination: response?.meta,
-      });
-    } catch (e) {
-      throw e;
-    }
+    setBooks({ loading: true });
+    await deleteBook(id);
+    const response = await listBooks({ limit: selectedPageSize });
+    setBooks({
+      loading: false,
+      list: response?.books,
+      pagination: response?.meta,
+    });
   },
 });
