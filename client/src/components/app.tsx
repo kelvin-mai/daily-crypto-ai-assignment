@@ -1,43 +1,17 @@
 import { useEffect } from 'react';
 
+import { useAppEffects, useAppStore } from '../lib/store';
+import { Toaster } from './common/toast';
 import { Navbar } from './layout/navbar';
-import { useAppStore } from '../lib/store';
-import { getProfile } from '../api/auth';
 import { BooksContainer } from './books/container';
-import { Toaster } from '../components/common/toast';
 
 export const App = () => {
-  const {
-    initialized,
-    user,
-    actions: { setInitialized, setUser, setTheme },
-  } = useAppStore();
-
-  const initializeApp = async () => {
-    try {
-      if (localStorage.getItem('token')) {
-        const profile = await getProfile();
-        setUser(profile);
-      }
-      const root = window.document.documentElement;
-      const systemTheme = localStorage.getItem('vite-ui-theme');
-      if (systemTheme) {
-        setTheme(localStorage.getItem('vite-ui-theme') as 'light' | 'dark');
-        root.classList.add(systemTheme);
-      } else {
-        localStorage.setItem('vite-ui-theme', 'light');
-        setTheme('light');
-      }
-    } catch (err) {
-      localStorage.removeItem('token');
-    } finally {
-      setInitialized(true);
-    }
-  };
+  const { initialized, user } = useAppStore();
+  const { initialize } = useAppEffects();
 
   useEffect(() => {
     if (!initialized) {
-      initializeApp();
+      initialize();
     }
   }, [initialized]);
 

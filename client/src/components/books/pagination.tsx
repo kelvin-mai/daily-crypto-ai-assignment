@@ -6,7 +6,7 @@ import {
 } from '@mynaui/icons-react';
 
 import { listBooks } from '../../api/book';
-import { useAppStore } from '../../lib/store';
+import { useAppActions, useAppStore } from '../../lib/store';
 import { Button } from '../common/button';
 import {
   DropdownMenu,
@@ -21,13 +21,15 @@ const btnClass = `shadow border border-slate-200 hover:bg-slate-200 transition-c
 
 export const BookPagination = () => {
   const {
+    selectedPageSize,
     books: { pagination },
-    actions: { setBooks },
   } = useAppStore();
+  const { setBooks, setSelectedPageSize } = useAppActions();
 
   if (!pagination) return null;
 
-  const { currentPage, pageSize, pages, total } = pagination;
+  const pageSize = selectedPageSize;
+  const { currentPage, pages, total } = pagination;
 
   const loadBooks = async (params: { limit?: number; page?: number }) => {
     setBooks({ loading: true });
@@ -53,6 +55,7 @@ export const BookPagination = () => {
     loadBooks({ page });
   };
   const handlePageSize = (size: number) => {
+    setSelectedPageSize(size);
     loadBooks({ limit: size, page: 1 });
   };
 

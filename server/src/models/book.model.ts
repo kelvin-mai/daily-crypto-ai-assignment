@@ -1,4 +1,5 @@
 import mongoose, { type Document, Schema } from 'mongoose';
+
 import { IUser } from './user.model';
 
 export interface IBook extends Document {

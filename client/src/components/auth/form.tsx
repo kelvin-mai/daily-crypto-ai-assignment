@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { SpinnerOne } from '@mynaui/icons-react';
 import { toast } from 'sonner';
 
+import type { AuthParams } from '../../api/auth';
+import { useAppEffects } from '../../lib/store';
 import { FormInput } from '../common/form';
-import { AuthParams, register, login } from '../../api/auth';
-import { useAppStore } from '../../lib/store';
 import { Button } from '../common/button';
 
 type AuthFormProps = {
@@ -13,10 +13,7 @@ type AuthFormProps = {
 };
 
 export const AuthForm: React.FC<AuthFormProps> = ({ mode, onComplete }) => {
-  const action = mode === 'register' ? register : login;
-  const {
-    actions: { setUser },
-  } = useAppStore();
+  const { authenticate } = useAppEffects();
   const [params, setParams] = useState<AuthParams>({
     email: '',
     name: '',
@@ -27,9 +24,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onComplete }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await action(params);
-      localStorage.setItem('token', response?.token!);
-      setUser(response?.user);
+      await authenticate(mode, params);
       toast.success('Authentication Successful');
       onComplete();
     } catch (e) {

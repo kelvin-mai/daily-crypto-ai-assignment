@@ -1,10 +1,10 @@
 import { useState } from 'react';
-
-import { BookParams, createBook, listBooks, updateBook } from '../../api/book';
-import { FormInput } from '../common/form';
-import { useAppStore } from '../../lib/store';
-import { Button } from '../common/button';
 import { toast } from 'sonner';
+
+import { BookParams, updateBook } from '../../api/book';
+import { useAppEffects, useAppStore } from '../../lib/store';
+import { FormInput } from '../common/form';
+import { Button } from '../common/button';
 
 type BookFormProps = {
   mode: 'create' | 'edit';
@@ -26,8 +26,9 @@ export const BookForm: React.FC<BookFormProps> = ({
   pagesRead,
 }) => {
   const {
-    actions: { setBooks, setBook },
+    actions: { setBook },
   } = useAppStore();
+  const { createBookAndRefetch } = useAppEffects();
   const [params, setParams] = useState<BookParams>({
     title: title || '',
     author: author || '',
@@ -38,14 +39,7 @@ export const BookForm: React.FC<BookFormProps> = ({
     e.preventDefault();
     if (mode === 'create') {
       try {
-        await createBook(params);
-        setBooks({ loading: true });
-        const data = await listBooks({});
-        setBooks({
-          loading: false,
-          list: data?.books,
-          pagination: data?.meta,
-        });
+        await createBookAndRefetch(params);
         toast.success('Book added');
         onComplete();
       } catch (e) {

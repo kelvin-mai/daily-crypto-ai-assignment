@@ -1,73 +1,13 @@
 import { BookCheckSolid, SpinnerOne, Sun, Moon } from '@mynaui/icons-react';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../common/dropdown';
-import { AuthDialog } from '../auth/dialog';
-import { useAppStore } from '../../lib/store';
+import { useAppEffects, useAppStore } from '../../lib/store';
 import { Switch } from '../common/switch';
-import { toast } from 'sonner';
-
-type AvatarProps = {
-  email: string;
-  name: string;
-};
-
-const Avatar: React.FC<AvatarProps> = ({ email, name }) => {
-  const {
-    actions: { logout },
-  } = useAppStore();
-  const handleLogout = () => {
-    logout();
-    localStorage.removeItem('token');
-    toast.success('You have been logged out.');
-  };
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <div className="uppercase flex h-8 w-8 items-center justify-center rounded-full bg-violet-400 text-white font-bold">
-          <span>{name[0]}</span>
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuLabel>
-          <p>{email}</p>
-          <p>{name}</p>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-};
+import { AuthDialog } from '../auth/dialog';
+import { Avatar } from '../auth/avatar';
 
 export const Navbar = () => {
-  const {
-    initialized,
-    user,
-    theme,
-    actions: { setTheme },
-  } = useAppStore();
-  const toggleTheme = (v: boolean) => {
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    if (v) {
-      setTheme('dark');
-      root.classList.add('dark');
-      localStorage.setItem('vite-ui-theme', 'dark');
-    } else {
-      setTheme('light');
-      root.classList.add('light');
-      localStorage.setItem('vite-ui-theme', 'light');
-    }
-  };
+  const { initialized, user, theme } = useAppStore();
+  const { setTheme } = useAppEffects();
   return (
     <header className="bg-slate-900 py-2">
       <div className="container flex items-center justify-between">
@@ -96,7 +36,7 @@ export const Navbar = () => {
           )}
           <div className="flex items-center justify-center gap-2">
             <Sun className="text-teal-500" />
-            <Switch checked={theme === 'dark'} onCheckedChange={toggleTheme} />
+            <Switch checked={theme === 'dark'} onCheckedChange={setTheme} />
             <Moon className="text-teal-500" />
           </div>
         </div>

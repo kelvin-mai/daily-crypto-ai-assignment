@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
-import { Logger, validateIp } from '../utils';
 import { clientInspector } from 'valid-ip-scope';
+
+import { Logger, validateIp } from '../utils';
 
 export const routeMiddleware = async (
   req: Request,

@@ -7,14 +7,14 @@ import {
   SpinnerOne,
 } from '@mynaui/icons-react';
 import { motion, useMotionTemplate, useMotionValue } from 'motion/react';
+import { toast } from 'sonner';
 
 import type { BookDocument } from '../../lib/types/api';
+import { updateBook } from '../../api/book';
+import { useAppActions, useAppEffects, useAppStore } from '../../lib/store';
 import { Progress } from '../common/progress';
-import { BookDialog } from './dialog';
-import { useAppStore } from '../../lib/store';
-import { deleteBook, listBooks, updateBook } from '../../api/book';
 import { Button } from '../common/button';
-import { toast } from 'sonner';
+import { BookDialog } from './dialog';
 
 type UpdateProgressInputProps = {
   pagesRead: number;
@@ -84,37 +84,39 @@ export const BookCard: React.FC<BookCardProps> = ({
   totalPages,
 }) => {
   const percentage = Math.round((pagesRead / totalPages) * 100);
-  const {
-    actions: { setBooks, setBook },
-  } = useAppStore();
+  const { setBook } = useAppActions();
+  const { deleteBookAndRefetch } = useAppEffects();
   const [page, setPage] = useState(pagesRead);
   const [loading, setLoading] = useState(false);
   const handleUpdateProgress = async () => {
     setLoading(true);
-    try {
-      const response = await updateBook({ id: _id, pagesRead: page });
-      setBook(response.book);
-      toast.success('Book progress updated');
-    } catch (e) {
-      toast.error('Error updating book progress', {
-        description: (e as Error).message
-          ? (e as Error).message
-          : 'Please try again',
+    if (page > totalPages) {
+      toast.error('Invalid page number', {
+        description: `Page number must be between 0 and ${totalPages}`,
       });
+    } else if (page < 0) {
+      toast.error('Invalid page number', {
+        description: `Page number must be greater than or equal to 0`,
+      });
+    } else {
+      try {
+        const response = await updateBook({ id: _id, pagesRead: page });
+        setBook(response.book);
+        toast.success('Book progress updated');
+      } catch (e) {
+        toast.error('Error updating book progress', {
+          description: (e as Error).message
+            ? (e as Error).message
+            : 'Please try again',
+        });
+      }
     }
     setLoading(false);
   };
   const handleDelete = async () => {
     setLoading(true);
     try {
-      await deleteBook(_id);
-      setBooks({ loading: true });
-      const data = await listBooks({});
-      setBooks({
-        loading: false,
-        list: data?.books,
-        pagination: data?.meta,
-      });
+      await deleteBookAndRefetch(_id);
       toast.success('Book deleted');
     } catch (e) {
       toast.error('Error deleting book', {

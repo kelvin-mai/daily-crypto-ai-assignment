@@ -9,8 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../common/dialog';
-import { AuthForm } from './form';
 import { Button } from '../common/button';
+import { AuthForm } from './form';
 
 type AuthDialogProps = {
   action: 'register' | 'login';
